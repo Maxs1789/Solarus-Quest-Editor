@@ -64,6 +64,8 @@ private slots:
   void last();
   void next();
 
+  void export_to_gif();
+
 private slots:
 
   void update_zoom();

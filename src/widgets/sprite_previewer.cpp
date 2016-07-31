@@ -15,7 +15,11 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "widgets/sprite_previewer.h"
+#include "editor_exception.h"
+#include "gif_encoder.h"
+#include <QFileDialog>
 #include <QMenu>
+#include <QMessageBox>
 
 namespace SolarusEditor {
 
@@ -62,6 +66,7 @@ SpritePreviewer::SpritePreviewer(QWidget *parent) :
   connect(ui.next_button, SIGNAL(clicked()), this, SLOT(next()));
 
   connect(ui.origin_check_box, SIGNAL(clicked()), this, SLOT(update_origin()));
+  connect(ui.export_button, SIGNAL(clicked(bool)), this, SLOT(export_to_gif()));
 }
 
 /**
@@ -145,6 +150,7 @@ void SpritePreviewer::update_selection() {
   bool is_direction = index.is_direction_index();
   ui.origin_check_box->setEnabled(is_direction);
   ui.zoom_button->setEnabled(is_direction);
+  ui.export_button->setEnabled(is_direction);
 
   if (!is_direction) {
     timer.stop();
@@ -337,6 +343,42 @@ void SpritePreviewer::next() {
   current_frame++;
   update_frame();
   update_buttons();
+}
+
+/**
+ * @brief Slot called when the user click on the export button.
+ */
+void SpritePreviewer::export_to_gif() {
+
+  if (!index.is_direction_index()) {
+    return;
+  }
+
+  static QString filename = "";
+  filename = QFileDialog::getSaveFileName(
+    this, tr("Export to GIF"), filename, tr("GIF (*.gif)"), nullptr,
+    QFileDialog::DontConfirmOverwrite);
+
+  if (!filename.endsWith(".gif", Qt::CaseInsensitive)) {
+    filename += ".gif";
+  }
+
+  if (QFile(filename).exists()) {
+    int res = QMessageBox::question(
+      this, tr("Overwrite the file"),
+      tr("The file '%1' already exists."
+         " Do you want to overwrite it?").arg(filename));
+    if (res != QMessageBox::Yes) {
+      return;
+    }
+  }
+
+  try {
+    GifEncoder::encode_sprite_direction(filename, model, index);
+  }
+  catch (const EditorException& ex) {
+    ex.show_dialog();
+  }
 }
 
 /**

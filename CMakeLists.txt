@@ -53,6 +53,7 @@ find_package(VorbisFile REQUIRED)
 find_package(Ogg REQUIRED)
 find_package(ModPlug REQUIRED)
 find_package(PhysFS REQUIRED)
+find_package(GIF REQUIRED)
 if(SOLARUS_USE_LUAJIT)
   find_package(LuaJit REQUIRED)
 else()
@@ -83,6 +84,7 @@ include_directories(SYSTEM
   "${OGG_INCLUDE_DIR}"
   "${LUA_INCLUDE_DIR}"
   "${PHYSFS_INCLUDE_DIR}"
+  "${GIF_INCLUDE_DIR}"
 )
 
 # Source files.
@@ -173,6 +175,7 @@ set(solarus_quest_editor_SOURCES
   include/editor_settings.h
   include/enum_traits.h
   include/file_tools.h
+  include/gif_encoder.h
   include/grid_style.h
   include/ground_traits.h
   include/indexed_string_tree.h
@@ -282,6 +285,7 @@ set(solarus_quest_editor_SOURCES
   src/editor_exception.cpp
   src/editor_settings.cpp
   src/file_tools.cpp
+  src/gif_encoder.cpp
   src/grid_style.cpp
   src/ground_traits.cpp
   src/indexed_string_tree.cpp
@@ -387,6 +391,7 @@ target_link_libraries(solarus-quest-editor
   "${VORBISFILE_LIBRARY}"
   "${OGG_LIBRARY}"
   "${MODPLUG_LIBRARY}"
+  "${GIF_LIBRARIES}"
 )
 
 # Set files to install
