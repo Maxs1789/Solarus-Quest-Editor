@@ -228,6 +228,7 @@ void ExportToGifDialog::update_preview() {
   }
 
   preview_item->setPixmap(pixmap);
+  ui.preview_graphics_view->setSceneRect(pixmap.rect());
 }
 
 /**
