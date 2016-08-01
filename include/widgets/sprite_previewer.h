@@ -23,7 +23,7 @@
 #include <QTimer>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsLineItem>
-#include "sprite_model.h"
+#include "widgets/export_to_gif_dialog.h"
 
 namespace SolarusEditor {
 
@@ -86,6 +86,8 @@ private:
   QMap<double, QAction*>
       zoom_actions;             /**< Action of each zoom value. */
   double zoom;                  /**< Zoom factor currently applied. */
+  ExportToGifDialog
+    export_to_gif_dialog;       /**< The dialog to export into gif. */
 
 };
 

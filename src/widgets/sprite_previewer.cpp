@@ -30,7 +30,8 @@ namespace SolarusEditor {
 SpritePreviewer::SpritePreviewer(QWidget *parent) :
   QWidget(parent),
   model(nullptr),
-  zoom(1.0) {
+  zoom(1.0),
+  export_to_gif_dialog(this) {
 
   ui.setupUi(this);
 
@@ -354,29 +355,10 @@ void SpritePreviewer::export_to_gif() {
     return;
   }
 
-  static QString filename = "";
-  filename = QFileDialog::getSaveFileName(
-    this, tr("Export to GIF"), filename, tr("GIF (*.gif)"), nullptr,
-    QFileDialog::DontConfirmOverwrite);
-
-  if (!filename.endsWith(".gif", Qt::CaseInsensitive)) {
-    filename += ".gif";
-  }
-
-  if (QFile(filename).exists()) {
-    int res = QMessageBox::question(
-      this, tr("Overwrite the file"),
-      tr("The file '%1' already exists."
-         " Do you want to overwrite it?").arg(filename));
-    if (res != QMessageBox::Yes) {
-      return;
-    }
-  }
-
   try {
-    GifEncoder::encode_sprite_direction(filename, model, index);
-  }
-  catch (const EditorException& ex) {
+    export_to_gif_dialog.set_sprite_direction(model, index);
+    export_to_gif_dialog.exec();
+  } catch (const EditorException& ex) {
     ex.show_dialog();
   }
 }

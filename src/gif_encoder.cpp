@@ -24,64 +24,7 @@ namespace SolarusEditor {
 /**
  * @brief Encodes a sprite direction in a gif file.
  * @param filename The filename.
- * @param model The sprite model.
- * @param index The index of the direction.
- * @throws EditorException In case of error.
- */
-void GifEncoder::encode_sprite_direction(
-  const QString& filename, SpriteModel* model,
-  const SpriteModel::Index& index) {
-
-  // Check the model.
-  if (model == nullptr) {
-    throw EditorException(
-      QApplication::tr("Cannot encode gif:\nInvalid sprite"));
-  }
-
-  // Check the direction.
-  if (!index.is_direction_index() || !model->direction_exists(index)) {
-    throw EditorException(
-      QApplication::tr("Cannot encode gif:\n"
-      "The direction '%1' doesn't exists in animation '%2'").arg(
-      QString::number(index.direction_nb), index.animation_name));
-  }
-
-  // Get direction properties.
-  QImage image = model->get_animation_image(index);
-  QList<QRect> frames = model->get_direction_frames(index);
-  QRect rect = model->get_direction_all_frames_rect(index);
-  int frame_delay = model->get_animation_frame_delay(index);
-  int loop_on_frame = model->get_animation_loop_on_frame(index);
-
-  // Prepare the loop.
-  bool loop = loop_on_frame >= 0 && frames.length() > 1;
-  if (loop) {
-    // Remove the frames that aren't in the loop.
-    while (loop_on_frame-- > 0 && frames.length() > 1) {
-      frames.removeFirst();
-    }
-    loop = frames.length() > 1;
-  }
-
-  // Extract the useful part of the image.
-  // TODO: do a better conversion and set a valid transparent color.
-  QImage subimage = image.copy(rect).convertToFormat(QImage::Format_Indexed8);
-  int transparent_color = -1;
-
-  // Translate the frame to the subimage.
-  for (QRect& frame: frames) {
-    frame.translate(-rect.topLeft());
-  }
-
-  // Encode the sprite direction.
-  encode_sprite_direction(
-    filename, subimage, frames, loop, frame_delay, transparent_color);
-}
-
-/**
- * @brief Encodes a sprite direction in a gif file.
- * @param filename The filename.
- * @param indexed_image The indexed source image.
+ * @param image The source image.
  * @param frames The frames rect.
  * @param loop Whether the animation must loop.
  * @param frame_delay The frame delay.
@@ -89,13 +32,13 @@ void GifEncoder::encode_sprite_direction(
  * @throws EditorException In case of error.
  */
 void GifEncoder::encode_sprite_direction(
-  const QString& filename, QImage& indexed_image, const QList<QRect>& frames,
+  const QString& filename, QImage& image, const QList<QRect>& frames,
   bool loop, int frame_delay, int transparent_color) {
 
   // Check the image format.
-  if (indexed_image.format() != QImage::Format_Indexed8) {
-    throw EditorException(
-      QApplication::tr("Cannot encode gif:\nThe source image isn't indexed"));
+  if (image.format() != QImage::Format_Indexed8) {
+    image = image.convertToFormat(
+      QImage::Format_Indexed8, Qt::ThresholdDither | Qt::PreferDither);
   }
 
   // Open the gif file.
@@ -115,10 +58,10 @@ void GifEncoder::encode_sprite_direction(
 
   // Put the global datas.
   QSize size = frames.first().size();
-  put_global_data(file, indexed_image, size.width(), size.height(), loop);
+  put_global_data(file, image, size.width(), size.height(), loop);
 
   // Put the frames.
-  put_frames_data(file, indexed_image, frames, frame_delay, transparent_color);
+  put_frames_data(file, image, frames, frame_delay, transparent_color);
 
   // Close the gif file.
   EGifCloseFile(file, &error);

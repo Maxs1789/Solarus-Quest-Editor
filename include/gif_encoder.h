@@ -31,12 +31,8 @@ class GifEncoder {
 public:
 
   static void encode_sprite_direction(
-    const QString& filename, SpriteModel* model,
-    const SpriteModel::Index& index);
-
-  static void encode_sprite_direction(
-    const QString& filename, QImage& indexed_image, const QList<QRect>& frames,
-    bool loop, int frame_delay, int transparent_color);
+    const QString& filename, QImage& image, const QList<QRect>& frames,
+    bool loop, int frame_delay, int transparent_color = -1);
 
 private:
 

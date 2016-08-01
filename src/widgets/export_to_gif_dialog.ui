@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SolarusEditor::ExportToGifDialog</class>
+ <widget class="QDialog" name="SolarusEditor::ExportToGifDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>320</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Export to GIF</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <item>
+    <layout class="QHBoxLayout" name="file_name_layout">
+     <item>
+      <widget class="QLabel" name="file_name_label">
+       <property name="text">
+        <string>File name:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="file_name_field"/>
+     </item>
+     <item>
+      <widget class="QToolButton" name="browse_button">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="main_layout">
+     <item>
+      <layout class="QVBoxLayout" name="left_layout">
+       <item>
+        <widget class="QCheckBox" name="use_transparency_field">
+         <property name="text">
+          <string>Use transparency</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="transparent_label">
+         <property name="text">
+          <string>Transparent color:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListWidget" name="color_list_widget"/>
+       </item>
+       <item>
+        <spacer name="vertical_spacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="right_layout">
+       <item>
+        <widget class="QLabel" name="preview_label">
+         <property name="text">
+          <string>Preview:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGraphicsView" name="preview_graphics_view"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="button_box">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>button_box</sender>
+   <signal>accepted()</signal>
+   <receiver>SolarusEditor::ExportToGifDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>307</x>
+     <y>382</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>290</x>
+     <y>395</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_box</sender>
+   <signal>rejected()</signal>
+   <receiver>SolarusEditor::ExportToGifDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>211</x>
+     <y>380</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>211</x>
+     <y>395</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

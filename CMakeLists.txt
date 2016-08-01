@@ -132,6 +132,7 @@ set(solarus_quest_editor_SOURCES
   include/widgets/enum_menus.inl
   include/widgets/enum_selector.h
   include/widgets/enum_selector.inl
+  include/widgets/export_to_gif_dialog.h
   include/widgets/external_script_dialog.h
   include/widgets/find_text_dialog.h
   include/widgets/get_animation_name_dialog.h
@@ -244,6 +245,7 @@ set(solarus_quest_editor_SOURCES
   src/widgets/editor_tabs.cpp
   src/widgets/entity_item.cpp
   src/widgets/entity_selector.cpp
+  src/widgets/export_to_gif_dialog.cpp
   src/widgets/external_script_dialog.cpp
   src/widgets/find_text_dialog.cpp
   src/widgets/get_animation_name_dialog.cpp
@@ -330,6 +332,7 @@ set(solarus_quest_editor_FORMS
   src/widgets/change_string_key_dialog.ui
   src/widgets/dialogs_editor.ui
   src/widgets/edit_entity_dialog.ui
+  src/widgets/export_to_gif_dialog.ui
   src/widgets/external_script_dialog.ui
   src/widgets/find_text_dialog.ui
   src/widgets/main_window.ui
