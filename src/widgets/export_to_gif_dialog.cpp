@@ -297,6 +297,8 @@ void ExportToGifDialog::rebuild_image() {
   else if (source_image.format() != QImage::Format_Indexed8) {
     image = source_image.convertToFormat(
         QImage::Format_Indexed8, Qt::ThresholdDither | Qt::PreferDither);
+  } else {
+    image = source_image;
   }
 
   // Remove the alpha channel.
