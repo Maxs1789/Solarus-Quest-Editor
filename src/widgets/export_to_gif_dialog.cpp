@@ -53,6 +53,8 @@ ExportToGifDialog::ExportToGifDialog(QWidget* parent) :
 
   connect(ui.browse_button, SIGNAL(clicked(bool)),
           this, SLOT(change_file_name_requested()));
+  connect(ui.exact_color_match_field, SIGNAL(toggled(bool)),
+          this, SLOT(change_exact_color_match_requested()));
   connect(ui.use_transparency_field, SIGNAL(toggled(bool)),
           this, SLOT(change_use_transparency_requested()));
   connect(ui.color_list_widget, SIGNAL(currentRowChanged(int)),
@@ -99,29 +101,12 @@ void ExportToGifDialog::set_sprite_direction(
 
   // Get the useful part of the image.
   QRect rect = model->get_direction_all_frames_rect(index);
-  image = model->get_animation_image(index).copy(rect);
-
-  // Convert to indexed image.
-  if (image.format() != QImage::Format_Indexed8) {
-    image = image.convertToFormat(
-      QImage::Format_Indexed8, Qt::ThresholdDither | Qt::PreferDither);
-  }
-
-  // Remove the alpha channel.
-  QVector<QRgb> colors = image.colorTable();
-  for (QRgb& color: colors) {
-    color = qRgb(qRed(color), qGreen(color), qBlue(color));
-  }
-  image.setColorTable(colors);
+  source_image = model->get_animation_image(index).copy(rect);
 
   // Translate the frame to the subimage.
   for (QRect& frame: frames) {
     frame.translate(-rect.topLeft());
   }
-
-  // Update.
-  rebuild_color_list();
-  update();
 
   // Auto filename.
   QString filename =
@@ -130,6 +115,11 @@ void ExportToGifDialog::set_sprite_direction(
     model->get_sprite_id().replace("/", "."), index.animation_name,
     QString::number(index.direction_nb));
   ui.file_name_field->setText(filename);
+
+  // Update.
+  rebuild_image();
+  rebuild_color_list();
+  update();
 }
 
 /**
@@ -155,6 +145,16 @@ void ExportToGifDialog::change_file_name_requested() {
   if (!filename.isEmpty()) {
     ui.file_name_field->setText(filename);
   }
+}
+
+/**
+ * @brief Slot called when the user wants change the exact color match field.
+ */
+void ExportToGifDialog::change_exact_color_match_requested() {
+
+  rebuild_image();
+  rebuild_color_list();
+  update_preview();
 }
 
 /**
@@ -272,6 +272,39 @@ bool ExportToGifDialog::export_gif() {
   }
 
   return true;
+}
+
+/**
+ * @brief Rebuilds the image.
+ */
+void ExportToGifDialog::rebuild_image() {
+
+  QVector<QRgb> colors;
+
+  // Exact color matching.
+  if (ui.exact_color_match_field->isChecked()) {
+    for (int x = 0; x < source_image.width(); ++x) {
+      for (int y = 0; y < source_image.height(); ++y) {
+        QRgb color = source_image.pixel(x, y);
+        if (!colors.contains(color)) {
+          colors.append(color);
+        }
+      }
+    }
+    image = source_image.convertToFormat(QImage::Format_Indexed8, colors);
+  }
+  // Convert to indexed image.
+  else if (source_image.format() != QImage::Format_Indexed8) {
+    image = source_image.convertToFormat(
+        QImage::Format_Indexed8, Qt::ThresholdDither | Qt::PreferDither);
+  }
+
+  // Remove the alpha channel.
+  colors = image.colorTable();
+  for (QRgb& color: colors) {
+    color = qRgb(qRed(color), qGreen(color), qBlue(color));
+  }
+  image.setColorTable(colors);
 }
 
 /**

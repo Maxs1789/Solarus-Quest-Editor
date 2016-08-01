@@ -42,6 +42,8 @@ public slots:
 
   void change_file_name_requested();
 
+  void change_exact_color_match_requested();
+
   void update_use_transparency();
   void change_use_transparency_requested();
 
@@ -58,11 +60,13 @@ private slots:
 
 private:
 
+  void rebuild_image();
   void rebuild_color_list();
 
   Ui::ExportToGifDialog ui;     /**< The widgets. */
   SpriteModel* model;           /**< The current sprite model. */
   SpriteModel::Index index;     /**< The current direction index. */
+  QImage source_image;          /**< The source image. */
   QImage image;                 /**< The image. */
   QList<QRect> frames;          /**< The frames rect. */
   bool loop;                    /**< Whether the animation loop. */

@@ -40,6 +40,13 @@
      <item>
       <layout class="QVBoxLayout" name="left_layout">
        <item>
+        <widget class="QCheckBox" name="exact_color_match_field">
+         <property name="text">
+          <string>Exact color match</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QCheckBox" name="use_transparency_field">
          <property name="text">
           <string>Use transparency</string>
