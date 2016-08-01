@@ -154,6 +154,7 @@ void ExportToGifDialog::change_exact_color_match_requested() {
 
   rebuild_image();
   rebuild_color_list();
+  update_transparent_color();
   update_preview();
 }
 
