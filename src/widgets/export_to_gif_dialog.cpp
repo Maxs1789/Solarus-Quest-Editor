@@ -15,6 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "widgets/export_to_gif_dialog.h"
+#include "widgets/gui_tools.h"
 #include "editor_exception.h"
 #include "gif_encoder.h"
 #include <QBitmap>
@@ -292,6 +293,15 @@ void ExportToGifDialog::rebuild_image() {
         }
       }
     }
+
+    if (colors.length() > 256) {
+      GuiTools::warning_dialog(tr(
+        "Cannot use exact color match:\n"
+        "The image contains more than 256 colors."));
+      ui.exact_color_match_field->setChecked(false);
+      return;
+    }
+
     if (source_image.format() == QImage::Format_Indexed8) {
       // Force the conversion.
       image = source_image.convertToFormat(QImage::Format_RGB32);
