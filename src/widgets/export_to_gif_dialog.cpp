@@ -129,6 +129,14 @@ void ExportToGifDialog::set_sprite_direction(
   // Update.
   rebuild_color_list();
   update();
+
+  // Auto filename.
+  QString filename =
+    QFileInfo(ui.file_name_field->text()).absoluteDir().absolutePath();
+  filename += QString("/%1-%2.%3.gif").arg(
+    model->get_sprite_id().replace("/", "."), index.animation_name,
+    QString::number(index.direction_nb));
+  ui.file_name_field->setText(filename);
 }
 
 /**
