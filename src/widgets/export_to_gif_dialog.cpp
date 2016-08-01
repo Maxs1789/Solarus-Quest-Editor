@@ -291,7 +291,13 @@ void ExportToGifDialog::rebuild_image() {
         }
       }
     }
-    image = source_image.convertToFormat(QImage::Format_Indexed8, colors);
+    if (source_image.format() == QImage::Format_Indexed8) {
+      // Force the conversion.
+      image = source_image.convertToFormat(QImage::Format_RGB32);
+      image = image.convertToFormat(QImage::Format_Indexed8, colors);
+    } else {
+      image = source_image.convertToFormat(QImage::Format_Indexed8, colors);
+    }
   }
   // Convert to indexed image.
   else if (source_image.format() != QImage::Format_Indexed8) {
