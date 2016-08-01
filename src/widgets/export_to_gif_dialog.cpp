@@ -68,13 +68,6 @@ ExportToGifDialog::ExportToGifDialog(QWidget* parent) :
 void ExportToGifDialog::set_sprite_direction(
   SpriteModel* model, const SpriteModel::Index& index) {
 
-  if (model == this->model &&
-      index.animation_name == this->index.animation_name &&
-      index.direction_nb == this->index.direction_nb) {
-    // No change.
-    return;
-  }
-
   // Check the model.
   if (model == nullptr) {
     throw EditorException(tr("Invalid sprite"));
